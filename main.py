@@ -1,6 +1,5 @@
-
 from datetime import date
-from flask import Flask, abort, render_template, redirect, url_for, flash
+from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -9,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
-# Import your forms from the forms.py
 from forms import CreatePostForm, RegisteredForm, LoginForm,CommentForm
 import os
 
@@ -160,17 +158,25 @@ def login():
         result=db.session.execute(db.select(User).where(User.email == email))
         users= result.scalars().all()
         #the email in db is unique so will only have one result
-
         if not users:
             flash("the email is not exist try again")
             return redirect(url_for("login"))
         #because we have different 2classes storage in db (blogposts, users)
-        elif not check_password_hash(users.password, password):
-            flash("the password not correct, please try again")
-            return redirect(url_for("login"))
-        else:
-            login_user(users)
-            return redirect( url_for('get_all_posts', name=users.name))
+        try:
+            if not check_password_hash(users.password, password):
+                flash("the password not correct, please try again")
+                return redirect(url_for("login"))
+            else:
+                login_user(users)
+                return redirect( url_for('get_all_posts', name=users.name))
+        except AttributeError: #should incase its idnetify datas as list
+            users=users[0]
+            if not check_password_hash(users.password, password):
+                flash("the password not correct, please try again")
+                return redirect(url_for("login"))
+            else:
+                login_user(users)
+                return redirect(url_for('get_all_posts', name=users.name))
 
     return render_template("login.html", form=form, current_user=current_user)
 
