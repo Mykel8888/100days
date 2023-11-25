@@ -30,7 +30,7 @@ app.config['SECRET_KEY'] = SECRETE_KEY
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
-# TODO: Configure Flask-Login
+# TODO: Configures Flask-Login
 login_manager=LoginManager()
 login_manager.init_app(app)
 
