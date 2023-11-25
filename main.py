@@ -3,13 +3,13 @@ from flask import Flask, abort, render_template, redirect, url_for, flash, reque
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user,login_required
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisteredForm, LoginForm,CommentForm
-import os
+from config import SECRETE_KEY, SQLALCHEMY_DATABASE_URI
 
 '''
 Make sure the required packages are installed: 
@@ -25,7 +25,7 @@ This will install the packages from the requirements.txt for this project.
 '''
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRETE_KEY')
+app.config['SECRET_KEY'] = SECRETE_KEY
 
 ckeditor = CKEditor(app)
 Bootstrap5(app)
@@ -35,7 +35,7 @@ login_manager=LoginManager()
 login_manager.init_app(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get("DB_URI", 'sqlite:///posts.db')
+app.config['SQLALCHEMY_DATABASE_URI']= SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -61,6 +61,7 @@ class BlogPost(db.Model):
     #Create reference to the User object , the "posts", refer to the post property in the User class.
     author = relationship("User", back_populates='posts')
 
+
     title = db.Column(db.String(250), unique=True, nullable=False)
     subtitle = db.Column(db.String(250), nullable=False)
     date = db.Column(db.String(250), nullable=False)
@@ -77,8 +78,8 @@ class Comments(db.Model):
     comment_author = relationship("User", back_populates="comment")
 # TODO: Create a User table for all your registered users.
     # to obtain the post id
-    post_id =db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
-    parent_post= relationship("BlogPost", back_populates="comment")
+    post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
+    parent_post = relationship("BlogPost", back_populates="comment")
     text = db.Column(db.Text, nullable=False)
 
 
