@@ -9,7 +9,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisteredForm, LoginForm,CommentForm
-from config import SECRETE_KEY, SQLALCHEMY_DATABASE_URI
+from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI
 
 '''
 Make sure the required packages are installed: 
@@ -25,7 +25,7 @@ This will install the packages from the requirements.txt for this project.
 '''
 
 app = Flask(__name__)
-app.config['FLASK_DEBUG'] = SECRETE_KEY
+app.config['FLASK_DEBUG'] = FLASK_DEBUG
 
 ckeditor = CKEditor(app)
 Bootstrap5(app)
