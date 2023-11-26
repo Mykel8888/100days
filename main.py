@@ -9,7 +9,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisteredForm, LoginForm,CommentForm
-from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI, SECRETE_KEY
+from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI, SECRETE_KEY, Email, Password
 import yagmail
 '''
 Make sure the required packages are installed: 
@@ -23,11 +23,12 @@ pip3 install -r requirements.txt
 
 This will install the packages from the requirements.txt for this project.
 '''
-email_from ="michaelolayiwola@gmail.com"
-password=  "hlju zitk cxie olbz"
+email_from=Email
+password=Password
 
 app = Flask(__name__)
-app.config['FLASK_DEBUG']=FLASK_DEBUG#app.config['SECRET_KEY']=SECRETE_KEY
+app.config['FLASK_DEBUG']=FLASK_DEBUG
+app.config['SECRET_KEY']=SECRETE_KEY
 
 ckeditor = CKEditor(app)
 Bootstrap5(app)
