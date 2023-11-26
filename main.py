@@ -23,12 +23,18 @@ pip3 install -r requirements.txt
 
 This will install the packages from the requirements.txt for this project.
 '''
-email_from=Email
-password=Password
-
 app = Flask(__name__)
 app.config['FLASK_DEBUG']=FLASK_DEBUG
 app.config['SECRET_KEY']=SECRETE_KEY
+
+app.config['SQLALCHEMY_DATABASE_URI']= SQLALCHEMY_DATABASE_URI
+db = SQLAlchemy()
+db.init_app(app)
+
+app.config['Email']=Email
+app.config['Password']=Password
+
+
 
 ckeditor = CKEditor(app)
 Bootstrap5(app)
@@ -38,9 +44,7 @@ login_manager=LoginManager()
 login_manager.init_app(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI']= SQLALCHEMY_DATABASE_URI
-db = SQLAlchemy()
-db.init_app(app)
+
 
 
 class User(UserMixin, db.Model):
