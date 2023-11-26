@@ -9,8 +9,8 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisteredForm, LoginForm,CommentForm
-from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI
-
+from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI, SECRETE_KEY
+import yagmail
 '''
 Make sure the required packages are installed: 
 Open the Terminal in PyCharm (bottom left). 
@@ -23,9 +23,11 @@ pip3 install -r requirements.txt
 
 This will install the packages from the requirements.txt for this project.
 '''
+email_from ="michaelolayiwola@gmail.com"
+password=  "hlju zitk cxie olbz"
 
 app = Flask(__name__)
-app.config['FLASK_DEBUG'] = FLASK_DEBUG
+app.config['FLASK_DEBUG']=FLASK_DEBUG#app.config['SECRET_KEY']=SECRETE_KEY
 
 ckeditor = CKEditor(app)
 Bootstrap5(app)
@@ -277,9 +279,27 @@ def about():
     return render_template("about.html", current_user=current_user)
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["POST", "GET"])
 def contact():
+    if request.method == "POST":
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+        message = request.form['message']
+        print(name)
+        send_mail(email, name, phone, message)
+        return redirect(url_for('get_all_posts'))
+
     return render_template("contact.html", current_user=current_user)
+
+
+def send_mail(email, name, phone, message):
+    to_admin=(f"Subject:new message\n\nemail:{email}\nname: {name}\nphone: {phone}\nmessage: {message}")
+    to_user=(f"Subject:new message\n\nthanks for the filling  the contact form, it an honour cause its will go a long way, if you need a python coding website like this contact me i will do it freely for you, Thanks")
+    with yagmail.SMTP(email_from, password) as connection:
+        connection.send(to=email_from, subject="contact details", contents=to_admin)
+        connection.send(to=email, subject="Michaels'_blog", contents=to_user)
+        print("successfully sent")
 
 
 if __name__ == "__main__":

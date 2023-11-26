@@ -36,7 +36,7 @@
             id="contactForm"
             name="sentMessage"
             action="{{ url_for('contact') }}"
-            method="post"
+            method="POST"
           >
             <div class="form-floating">
               <input
@@ -47,7 +47,7 @@
                 placeholder="Enter your name..."
                 required
               />
-              <label for="name">Name</label>
+              <label for="name" class="">Name</label>
             </div>
             <div class="form-floating">
               <input
@@ -84,11 +84,11 @@
             </div>
             <br />
             <button
-              class="btn btn-danger text-uppercase"
+              class="btn btn-danger text-uppercase bg-primary"
               id="submitButton"
               type="submit"
             >
-              NOT USED in Day 69
+             Submit
             </button>
           </form>
         </div>

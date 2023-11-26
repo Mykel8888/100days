@@ -23,6 +23,8 @@ include "header.html" %}
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <!--TODO: render your registration form here-->
+        			<span style="color: blue">{{ err }}</span>
+
         {{ render_form(form, novalidate=True, button_map={ "submit": "primary"}) }}
       </div>
     </div>
