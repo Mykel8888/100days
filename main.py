@@ -9,7 +9,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisteredForm, LoginForm,CommentForm
-from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI, SECRETE_KEY, Email, Password
+#from config import FLASK_DEBUG, SQLALCHEMY_DATABASE_URI, SECRETE_KEY, Email, Password
 import yagmail
 '''
 Make sure the required packages are installed: 
@@ -24,16 +24,21 @@ pip3 install -r requirements.txt
 This will install the packages from the requirements.txt for this project.
 '''
 app = Flask(__name__)
-app.config['FLASK_DEBUG']=FLASK_DEBUG
-app.config['SECRET_KEY']=SECRETE_KEY
+app.config['FLASK_DEBUG'] = 1
 
-app.config['SQLALCHEMY_DATABASE_URI']= SQLALCHEMY_DATABASE_URI
+
+#app.config['SECRET_KEY']=SECRETE_KEY
+
+#app.config['SQLALCHEMY_DATABASE_URI']= SQLALCHEMY_DATABASE_URI
+
+app.config['SECRET_KEY'] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+
 db = SQLAlchemy()
 db.init_app(app)
 
-app.config['Email']=Email
-app.config['Password']=Password
-
+Email_from = 'michaelbible05@gmail.com'
+password = 'xcof fvdn xawe spez'
 
 
 ckeditor = CKEditor(app)
@@ -301,8 +306,8 @@ def contact():
 def send_mail(email, name, phone, message):
     to_admin=(f"Subject:new message\n\nemail:{email}\nname: {name}\nphone: {phone}\nmessage: {message}")
     to_user=(f"Subject:new message\n\nthanks for the filling  the contact form, it an honour cause its will go a long way, if you need a python coding website like this contact me i will do it freely for you, Thanks")
-    with yagmail.SMTP(email_from, password) as connection:
-        connection.send(to=email_from, subject="contact details", contents=to_admin)
+    with yagmail.SMTP(Email_from, password) as connection:
+        connection.send(to=Email_from, subject="contact details", contents=to_admin)
         connection.send(to=email, subject="Michaels'_blog", contents=to_user)
         print("successfully sent")
 
