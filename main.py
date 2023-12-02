@@ -296,7 +296,6 @@ def contact():
         email = request.form['email']
         phone = request.form['phone']
         message = request.form['message']
-        print(name)
         send_mail(email, name, phone, message)
         return redirect(url_for('get_all_posts'))
 
@@ -310,6 +309,8 @@ def send_mail(email, name, phone, message):
         connection.send(to=Email_from, subject="contact details", contents=to_admin)
         connection.send(to=email, subject="Michaels'_blog", contents=to_user)
         print("successfully sent")
+
+
 
 
 if __name__ == "__main__":
